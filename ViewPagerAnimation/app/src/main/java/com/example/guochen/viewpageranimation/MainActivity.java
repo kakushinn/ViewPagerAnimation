@@ -28,7 +28,8 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         ViewPager pager = (ViewPager)findViewById(R.id.viewPager);
 //        pager.setPageTransformer(true,new ZoomOutPageTransformer());
-        pager.setPageTransformer(true,new DepthPageTransformer());
+//        pager.setPageTransformer(true,new DepthPageTransformer());
+        pager.setPageTransformer(true,new RotatePageTransformer());
         pager.setAdapter(new PagerAdapter() {
             @Override
             public int getCount() {
