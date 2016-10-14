@@ -20,16 +20,16 @@ public class MainActivity extends Activity {
 
     private int[] images = new int[]{R.mipmap.guide_image1,R.mipmap.guide_image2,R.mipmap.guide_image3};
     private List<ImageView> imageViewList = new ArrayList<ImageView>();
-
+    public MyViewPager pager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ViewPager pager = (ViewPager)findViewById(R.id.viewPager);
+        pager = (MyViewPager)findViewById(R.id.viewPager);
 //        pager.setPageTransformer(true,new ZoomOutPageTransformer());
 //        pager.setPageTransformer(true,new DepthPageTransformer());
-        pager.setPageTransformer(true,new RotatePageTransformer());
+//        pager.setPageTransformer(true,new RotatePageTransformer());
         pager.setAdapter(new PagerAdapter() {
             @Override
             public int getCount() {
@@ -48,6 +48,7 @@ public class MainActivity extends Activity {
                 imgView.setImageResource(images[position]);
                 imgView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 container.addView(imgView);
+                pager.setViewForPosition(imgView,position);
                 imageViewList.add(imgView);
                 return imgView;
             }
@@ -55,6 +56,7 @@ public class MainActivity extends Activity {
             @Override
             public void destroyItem(ViewGroup container, int position, Object object) {
                 container.removeView(imageViewList.get(position));
+                pager.removeViewForPosition(position);
             }
         });
     }
