@@ -21,6 +21,7 @@ public class MainActivity extends Activity {
     private int[] images = new int[]{R.mipmap.guide_image1,R.mipmap.guide_image2,R.mipmap.guide_image3};
     private List<ImageView> imageViewList = new ArrayList<ImageView>();
     public MyViewPager pager;
+    public ViewPagerIndicator viewPagerIndicator;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -30,6 +31,7 @@ public class MainActivity extends Activity {
 //        pager.setPageTransformer(true,new ZoomOutPageTransformer());
 //        pager.setPageTransformer(true,new DepthPageTransformer());
 //        pager.setPageTransformer(true,new RotatePageTransformer());
+        viewPagerIndicator = (ViewPagerIndicator)findViewById(R.id.indicator);
         pager.setAdapter(new PagerAdapter() {
             @Override
             public int getCount() {
@@ -58,6 +60,27 @@ public class MainActivity extends Activity {
                 container.removeView(imageViewList.get(position));
                 pager.removeViewForPosition(position);
             }
+
+
+        });
+
+        pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                viewPagerIndicator.scroll(position, positionOffset);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
         });
     }
+
+
 }
