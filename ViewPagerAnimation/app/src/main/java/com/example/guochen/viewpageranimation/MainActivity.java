@@ -18,7 +18,7 @@ import java.util.List;
 
 public class MainActivity extends Activity {
 
-    private int[] images = new int[]{R.mipmap.guide_image1,R.mipmap.guide_image2,R.mipmap.guide_image3};
+    private int[] images = new int[]{R.mipmap.guide_image1,R.mipmap.guide_image2,R.mipmap.guide_image3,R.mipmap.guide_image1,R.mipmap.guide_image2,R.mipmap.guide_image3,R.mipmap.guide_image1,R.mipmap.guide_image2,R.mipmap.guide_image3};
     private List<ImageView> imageViewList = new ArrayList<ImageView>();
     public MyViewPager pager;
     public ViewPagerIndicator viewPagerIndicator;

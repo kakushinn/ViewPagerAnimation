@@ -1,12 +1,16 @@
 package com.example.guochen.viewpageranimation;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.CornerPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
+import android.view.View;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -15,28 +19,33 @@ import android.widget.Toast;
  */
 public class ViewPagerIndicator extends LinearLayout {
 
-    // OŠpw¦Ší“I?“x
     private int mTriangleWidth;
-    // OŠpw¦Ší“I‚“x
+
     private int mTriangleHeight;
-    // OŠpw¦Ší“I‰nˆÊ’u
+
     private int mInitTranslation;
-    // OŠpw¦Ší‘Š?˜°› –‹?“x“I”ä—á
     private static final float RADIO_TRIANGLE_WIDTH = 1/6F;
-    // OŠpw¦Ší“IˆÚ?ˆÊ’u
     private int mTranslationX;
 
     private Path mPath;
 
     private Paint mPaint;
 
+    private int mTabVisibleCount;
 
+    private static final int DEFAULT_VISIBLE_COUNT = 4;
     public ViewPagerIndicator(Context context) {
         this(context, null);
     }
 
     public ViewPagerIndicator(Context context, AttributeSet attrs) {
         super(context, attrs);
+        TypedArray a = context.obtainStyledAttributes(attrs,R.styleable.ViewPagerIndicator);
+        mTabVisibleCount = a.getInt(R.styleable.ViewPagerIndicator_visible_tab_count,DEFAULT_VISIBLE_COUNT);
+        if(mTabVisibleCount < 0){
+            mTabVisibleCount = DEFAULT_VISIBLE_COUNT;
+        }
+        a.recycle();
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setColor(Color.parseColor("#ff000000"));
@@ -51,14 +60,13 @@ public class ViewPagerIndicator extends LinearLayout {
         canvas.drawPath(mPath, mPaint);
         canvas.restore();
         super.dispatchDraw(canvas);
-
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        mTriangleWidth = (int)(w/3 * RADIO_TRIANGLE_WIDTH);
-        mInitTranslation = (w/3- mTriangleWidth)/2;
+        mTriangleWidth = (int)(w/mTabVisibleCount * RADIO_TRIANGLE_WIDTH);
+        mInitTranslation = (w/mTabVisibleCount- mTriangleWidth)/2;
         initTriangle();
     }
 
@@ -73,9 +81,45 @@ public class ViewPagerIndicator extends LinearLayout {
     }
 
     public void scroll(int position, float offset){
-        int tabWidth = getWidth()/3;
+        int tabWidth = getWidth()/mTabVisibleCount;
         mTranslationX = (int)(tabWidth * (position + offset));
+
+        //tabå®¹å™¨ç§»åŠ¨ï¼Œå½“tabå¤„äºç§»åŠ¨è‡³æœ€åä¸€ä¸ªæ—¶
+        if(mTabVisibleCount != 1){
+            if(position >= (mTabVisibleCount-2) && offset > 0 && getChildCount() > mTabVisibleCount){
+                this.scrollTo((int) (((position - (mTabVisibleCount -2))+offset) * tabWidth), 0);
+            }
+        }else{
+            this.scrollTo((int)(tabWidth * (position + offset)), 0);
+        }
+
+
         invalidate();
+    }
+
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        int childCount = getChildCount();
+        if(childCount == 0){
+            return;
+        }else{
+            for(int i = 0;i < childCount;i++){
+                View view = getChildAt(i);
+                LinearLayout.LayoutParams layoutParams = (LayoutParams) view.getLayoutParams();
+                layoutParams.weight = 0;
+                layoutParams.width = getScreenWidth() / mTabVisibleCount;
+                view.setLayoutParams(layoutParams);
+            }
+        }
+
+    }
+
+    private int getScreenWidth() {
+        WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(displayMetrics);
+        return displayMetrics.widthPixels;
     }
 
 }
