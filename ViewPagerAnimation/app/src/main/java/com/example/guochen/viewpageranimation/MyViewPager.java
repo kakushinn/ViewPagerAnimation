@@ -62,6 +62,5 @@ class MyViewPager extends ViewPager {
         if(leftView != null){
             leftView.bringToFront();
         }
-
     }
 }

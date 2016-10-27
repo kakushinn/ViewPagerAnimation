@@ -7,12 +7,17 @@ import android.graphics.Color;
 import android.graphics.CornerPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.guochen.viewpageranimation.R;
 
 /**
  * Created by guochen on 2016/10/19.
@@ -33,6 +38,10 @@ public class ViewPagerIndicator extends LinearLayout {
 
     private int mTabVisibleCount;
 
+    private ViewPager mViewPager;
+
+    private boolean isFirstIndicator;
+
     private static final int DEFAULT_VISIBLE_COUNT = 4;
     public ViewPagerIndicator(Context context) {
         this(context, null);
@@ -40,7 +49,7 @@ public class ViewPagerIndicator extends LinearLayout {
 
     public ViewPagerIndicator(Context context, AttributeSet attrs) {
         super(context, attrs);
-        TypedArray a = context.obtainStyledAttributes(attrs,R.styleable.ViewPagerIndicator);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ViewPagerIndicator);
         mTabVisibleCount = a.getInt(R.styleable.ViewPagerIndicator_visible_tab_count,DEFAULT_VISIBLE_COUNT);
         if(mTabVisibleCount < 0){
             mTabVisibleCount = DEFAULT_VISIBLE_COUNT;
@@ -57,6 +66,8 @@ public class ViewPagerIndicator extends LinearLayout {
     protected void dispatchDraw(Canvas canvas) {
         canvas.save();
         canvas.translate(mInitTranslation + mTranslationX, getHeight());
+        Log.d("mTranslationX", "mTranslation :" + mTranslationX);
+        Log.d("Matrix", canvas.getMatrix() + "");
         canvas.drawPath(mPath, mPaint);
         canvas.restore();
         super.dispatchDraw(canvas);
@@ -86,14 +97,14 @@ public class ViewPagerIndicator extends LinearLayout {
 
         //tab容器移动，当tab处于移动至最后一个时
         if(mTabVisibleCount != 1){
-            if(position >= (mTabVisibleCount-2) && offset > 0 && getChildCount() > mTabVisibleCount){
+            if((position >= (mTabVisibleCount-2) && offset > 0 && getChildCount() > mTabVisibleCount) || mViewPager.getCurrentItem() >= 3){
                 this.scrollTo((int) (((position - (mTabVisibleCount -2))+offset) * tabWidth), 0);
+            }else {
+                this.scrollTo(0,0);
             }
         }else{
             this.scrollTo((int)(tabWidth * (position + offset)), 0);
         }
-
-
         invalidate();
     }
 
@@ -112,7 +123,7 @@ public class ViewPagerIndicator extends LinearLayout {
                 view.setLayoutParams(layoutParams);
             }
         }
-
+        onTabClickEvent();
     }
 
     private int getScreenWidth() {
@@ -122,4 +133,40 @@ public class ViewPagerIndicator extends LinearLayout {
         return displayMetrics.widthPixels;
     }
 
+    public void highlightTextView(int position){
+        View view = this.getChildAt(position);
+        if(view instanceof TextView){
+            ((TextView) view).setTextColor(0xffffffff);
+        }
+    }
+
+    public void resetTextColor(){
+        for(int i=0;i<getChildCount();i++){
+            View view = getChildAt(i);
+            if(view instanceof TextView){
+                ((TextView) view).setTextColor(0x77ffffff);
+            }
+        }
+    }
+
+    public void onTabClickEvent(){
+        for(int i=0;i<getChildCount();i++){
+            final int j = i;
+            View view = getChildAt(i);
+            view.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mViewPager.setCurrentItem(j);
+//                    if(j <= (mTabVisibleCount-1) && getChildCount() > mTabVisibleCount){
+//                        scrollTo(0, 0);
+//                    }
+                }
+            });
+        }
+    }
+
+    public void setViewPager(ViewPager viewPager){
+        this.mViewPager = viewPager;
+        onTabClickEvent();
+    }
 }
