@@ -66,8 +66,6 @@ public class ViewPagerIndicator extends LinearLayout {
     protected void dispatchDraw(Canvas canvas) {
         canvas.save();
         canvas.translate(mInitTranslation + mTranslationX, getHeight());
-        Log.d("mTranslationX", "mTranslation :" + mTranslationX);
-        Log.d("Matrix", canvas.getMatrix() + "");
         canvas.drawPath(mPath, mPaint);
         canvas.restore();
         super.dispatchDraw(canvas);
@@ -157,9 +155,6 @@ public class ViewPagerIndicator extends LinearLayout {
                 @Override
                 public void onClick(View v) {
                     mViewPager.setCurrentItem(j);
-//                    if(j <= (mTabVisibleCount-1) && getChildCount() > mTabVisibleCount){
-//                        scrollTo(0, 0);
-//                    }
                 }
             });
         }

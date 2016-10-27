@@ -1,6 +1,8 @@
 package com.example.guochen.viewpageranimation;
 
-import android.app.Activity;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
@@ -8,62 +10,67 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import View.Animation.ZoomOutPageTransformer;
+import View.Animation.EntertainmentNewsFragment;
+import View.Animation.FinanceNewsFragment;
+import View.Animation.HotNewsFragment;
+import View.Animation.JourneyNewsFragment;
+import View.Animation.MilitaryNewsFragment;
+import View.Animation.SportsNewsFragment;
+import View.Animation.TechnoligyNewsFragment;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity {
 
-    private int[] images = new int[]{R.mipmap.guide_image1,R.mipmap.guide_image2,R.mipmap.guide_image3,R.mipmap.guide_image1,R.mipmap.guide_image2,R.mipmap.guide_image3,R.mipmap.guide_image1,R.mipmap.guide_image2,R.mipmap.guide_image3};
-    private List<ImageView> imageViewList = new ArrayList<ImageView>();
     public ViewPager pager;
+    public List<Fragment> fragmentList = new ArrayList<Fragment>();
     public ViewPagerIndicator viewPagerIndicator;
+    public android.support.v4.app.FragmentManager fm;
+    public Fragment hotNewsFragment;
+    public Fragment entertainmentNewsFragment;
+    public Fragment journeyNewsFragment;
+    public Fragment militaryNewsFragment;
+    public Fragment sportsNewsFragment;
+    public Fragment technoligyNewsFragment;
+    public Fragment financeNewsFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        fm = getSupportFragmentManager();
         pager = (ViewPager)findViewById(R.id.viewPager);
 //        pager.setPageTransformer(true,new ZoomOutPageTransformer());
 //        pager.setPageTransformer(true,new DepthPageTransformer());
 //        pager.setPageTransformer(true,new RotatePageTransformer());
         viewPagerIndicator = (ViewPagerIndicator)findViewById(R.id.indicator);
         viewPagerIndicator.setViewPager(pager);
+
+        initFragmentList();
+
         if(pager.getCurrentItem() == 0){
             viewPagerIndicator.highlightTextView(0);
         }
-        pager.setAdapter(new PagerAdapter() {
+
+        pager.setAdapter(new FragmentPagerAdapter(fm) {
+            @Override
+            public Fragment getItem(int position) {
+                return fragmentList.get(position);
+            }
+
             @Override
             public int getCount() {
-
-                return images.length;
+                return fragmentList.size();
             }
 
             @Override
-            public boolean isViewFromObject(View view, Object object) {
-                return view == object;
+            public void destroyItem(View container, int position, Object object) {
+//                super.destroyItem(container, position, object);
             }
-
-            @Override
-            public Object instantiateItem(ViewGroup container, int position) {
-                ImageView imgView = new ImageView(MainActivity.this);
-                imgView.setImageResource(images[position]);
-                imgView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                container.addView(imgView);
-//                pager.setViewForPosition(imgView,position);
-                imageViewList.add(imgView);
-                return imgView;
-            }
-
-            @Override
-            public void destroyItem(ViewGroup container, int position, Object object) {
-                container.removeView(imageViewList.get(position));
-//                pager.removeViewForPosition(position);
-            }
-
-
         });
 
         pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -85,5 +92,20 @@ public class MainActivity extends Activity {
         });
     }
 
-
+    public void initFragmentList(){
+        hotNewsFragment = new HotNewsFragment();
+        fragmentList.add(hotNewsFragment);
+        entertainmentNewsFragment = new EntertainmentNewsFragment();
+        fragmentList.add(entertainmentNewsFragment);
+        journeyNewsFragment = new JourneyNewsFragment();
+        fragmentList.add(journeyNewsFragment);
+        militaryNewsFragment = new MilitaryNewsFragment();
+        fragmentList.add(militaryNewsFragment);
+        sportsNewsFragment = new SportsNewsFragment();
+        fragmentList.add(sportsNewsFragment);
+        technoligyNewsFragment = new TechnoligyNewsFragment();
+        fragmentList.add(technoligyNewsFragment);
+        financeNewsFragment = new FinanceNewsFragment();
+        fragmentList.add(financeNewsFragment);
+    }
 }
