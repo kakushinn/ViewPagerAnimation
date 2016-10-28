@@ -1,5 +1,6 @@
 package com.example.guochen.viewpageranimation;
 
+import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -14,6 +15,8 @@ import android.widget.ImageView;
 import java.util.ArrayList;
 import java.util.List;
 
+import Entities.News;
+import Logic.TopNewsService;
 import View.Animation.EntertainmentNewsFragment;
 import View.Animation.FinanceNewsFragment;
 import View.Animation.HotNewsFragment;
@@ -108,4 +111,6 @@ public class MainActivity extends FragmentActivity {
         financeNewsFragment = new FinanceNewsFragment();
         fragmentList.add(financeNewsFragment);
     }
+
+
 }

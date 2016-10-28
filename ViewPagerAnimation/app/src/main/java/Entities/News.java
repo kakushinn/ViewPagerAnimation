@@ -5,6 +5,9 @@ package Entities;
  */
 public class News {
 
+    public News() {
+    }
+
     public News(String title, String date, String thumbnail_pic, String url) {
         this.title = title;
         this.date = date;
