@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="10dp" android:paddingTop="5dp">
+    <ImageView
+        android:id="@+id/news_image"
+        android:layout_width="60dp"
+        android:layout_height="60dp" />
+    <LinearLayout
+        android:layout_marginLeft="10dp"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="60dp">
+        <TextView
+            android:id="@+id/news_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="党内监督是全面从严治党保障"/>
+
+        <TextView
+            android:id="@+id/news_date"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="2016/10/30"
+            android:gravity="bottom|right"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="5dp" />
+    </LinearLayout>
+
+</LinearLayout>

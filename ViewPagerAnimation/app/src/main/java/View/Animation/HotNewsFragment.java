@@ -7,13 +7,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.guochen.viewpageranimation.NewsImageViewPager;
 import com.example.guochen.viewpageranimation.R;
 
 import java.util.List;
 
 import Entities.News;
+import Logic.NewsListAdapter;
 import Logic.TopNewsService;
 
 /**
@@ -21,7 +24,8 @@ import Logic.TopNewsService;
  */
 public class HotNewsFragment extends android.support.v4.app.Fragment {
 
-    public TextView tv;
+    public ListView newsListView;
+    public NewsImageViewPager viewpager;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,8 +34,9 @@ public class HotNewsFragment extends android.support.v4.app.Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.text_test, null);
-        tv = (TextView)view.findViewById(R.id.test);
+        View view = inflater.from(getActivity()).inflate(R.layout.news_screen, null);
+        newsListView = (ListView) view.findViewById(R.id.news_list);
+        viewpager = (NewsImageViewPager) view.findViewById(R.id.newsImageViewPager);
         new HotNewsAsyncTask().execute("http://v.juhe.cn/toutiao/index?type=top&key=b69cc2e92edc5b582eba0a94c51173c8");
         return view;
     }
@@ -48,7 +53,7 @@ public class HotNewsFragment extends android.support.v4.app.Fragment {
         @Override
         protected void onPostExecute(List<News> newses) {
             super.onPostExecute(newses);
-            tv.setText(newses.get(0).getTitle());
+            newsListView.setAdapter(new NewsListAdapter(getActivity(),newses));
         }
     }
 
