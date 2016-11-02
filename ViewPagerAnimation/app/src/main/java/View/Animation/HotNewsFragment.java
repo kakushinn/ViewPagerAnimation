@@ -1,12 +1,15 @@
 package View.Animation;
 
 import android.app.Fragment;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -29,7 +32,7 @@ public class HotNewsFragment extends android.support.v4.app.Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("hot","This is hot news");
+        Log.d("hot", "This is hot news");
     }
 
     @Override
@@ -51,9 +54,19 @@ public class HotNewsFragment extends android.support.v4.app.Fragment {
         }
 
         @Override
-        protected void onPostExecute(List<News> newses) {
+        protected void onPostExecute(final List<News> newses) {
             super.onPostExecute(newses);
-            newsListView.setAdapter(new NewsListAdapter(getActivity(),newses));
+            newsListView.setAdapter(new NewsListAdapter(getActivity(), newses));
+            newsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Intent intent = new Intent();
+                    intent.setAction("android.intent.action.VIEW");
+                    Uri url = Uri.parse(newses.get(position).getUrl());
+                    intent.setData(url);
+                    startActivity(intent);
+                }
+            });
         }
     }
 

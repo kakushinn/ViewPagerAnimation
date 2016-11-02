@@ -5,13 +5,13 @@
     android:paddingLeft="10dp" android:paddingTop="5dp">
     <ImageView
         android:id="@+id/news_image"
-        android:layout_width="60dp"
-        android:layout_height="60dp" />
+        android:layout_width="80dp"
+        android:layout_height="80dp" />
     <LinearLayout
         android:layout_marginLeft="10dp"
         android:layout_width="match_parent"
         android:orientation="vertical"
-        android:layout_height="60dp">
+        android:layout_height="80dp">
         <TextView
             android:id="@+id/news_title"
             android:layout_width="match_parent"
