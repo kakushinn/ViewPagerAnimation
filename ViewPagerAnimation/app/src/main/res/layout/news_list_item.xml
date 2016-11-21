@@ -15,8 +15,7 @@
         <TextView
             android:id="@+id/news_title"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="党内监督是全面从严治党保障"/>
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/news_date"

@@ -1,6 +1,8 @@
 package Logic;
 
+import android.content.ClipData;
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,57 +19,70 @@ import Entities.News;
 /**
  * Created by guochen on 2016/11/01.
  */
-public class NewsListAdapter extends BaseAdapter {
+public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
     private List<News> list;
     private LayoutInflater inflater;
     private ImageLoader imageLoader;
+    private MyRecyclerViewItemClickListener mListener;
+
+    public interface MyRecyclerViewItemClickListener{
+        public void onItemClick(View view, int position);
+    }
+
     public NewsListAdapter(Context context, List<News> list) {
         this.context = context;
         this.list = list;
     }
 
     @Override
-    public int getCount() {
+    public int getItemCount() {
         return list.size();
     }
 
     @Override
-    public long getItemId(int position) {
-        return position;
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        ItemViewHolder viewHolder;
+        View view = inflater.from(context).inflate(R.layout.news_list_item,null);
+        viewHolder = new ItemViewHolder(view, mListener);
+        return viewHolder;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        MyViewHolder viewHolder;
-
-        if(convertView == null){
-            convertView = inflater.from(context).inflate(R.layout.news_list_item,null);
-            viewHolder = new MyViewHolder();
-            viewHolder.newsImageView = (ImageView) convertView.findViewById(R.id.news_image);
-            viewHolder.newsTitleText = (TextView) convertView.findViewById(R.id.news_title);
-            viewHolder.newsDateText = (TextView) convertView.findViewById(R.id.news_date);
-            convertView.setTag(viewHolder);
-        }else{
-            viewHolder = (MyViewHolder) convertView.getTag();
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int i) {
+        if(viewHolder instanceof ItemViewHolder){
+            String url = list.get(i).getThumbnail_pic();
+            ((ItemViewHolder)viewHolder).newsImageView.setTag(url);
+            ((ItemViewHolder)viewHolder).newsImageView.setImageResource(R.mipmap.ic_launcher);
+            new ImageLoader().loadImage(((ItemViewHolder)viewHolder).newsImageView, url);
+            ((ItemViewHolder)viewHolder).newsTitleText.setText(list.get(i).getTitle());
+            ((ItemViewHolder)viewHolder).newsDateText.setText(list.get(i).getDate().substring(0,10));
         }
-        String url = list.get(position).getThumbnail_pic();
-        viewHolder.newsImageView.setTag(url);
-        viewHolder.newsImageView.setImageResource(R.mipmap.ic_launcher);
-        new ImageLoader().loadImage(viewHolder.newsImageView, url);
-        viewHolder.newsTitleText.setText(list.get(position).getTitle());
-        viewHolder.newsDateText.setText(list.get(position).getDate().substring(0,10));
-        return convertView;
     }
 
-    @Override
-    public Object getItem(int position) {
-        return list.get(position);
+    public void setOnItemClickListener(MyRecyclerViewItemClickListener listener){
+        this.mListener = listener;
     }
 
-    class MyViewHolder{
+    class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public ImageView newsImageView;
         public TextView newsTitleText;
         public TextView newsDateText;
+        public MyRecyclerViewItemClickListener itemListener;
+        public ItemViewHolder(View itemView, MyRecyclerViewItemClickListener listener) {
+            super(itemView);
+            newsImageView = (ImageView)itemView.findViewById(R.id.news_image);
+            newsTitleText = (TextView)itemView.findViewById(R.id.news_title);
+            newsDateText = (TextView)itemView.findViewById(R.id.news_date);
+            this.itemListener = listener;
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if(itemListener != null){
+                itemListener.onItemClick(v,getPosition());
+            }
+        }
     }
 }

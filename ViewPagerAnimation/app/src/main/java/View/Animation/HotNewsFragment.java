@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,10 +28,13 @@ import Logic.TopNewsService;
 /**
  * Created by guochen on 2016/10/27.
  */
-public class HotNewsFragment extends android.support.v4.app.Fragment {
+public class HotNewsFragment extends android.support.v4.app.Fragment implements NewsListAdapter.MyRecyclerViewItemClickListener{
 
-    public ListView newsListView;
+    public RecyclerView newsListView;
     public NewsImageViewPager viewpager;
+    public List<News> _list;
+    public NewsListAdapter.MyRecyclerViewItemClickListener myRecyclerViewItemClickListener = null;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,9 +43,14 @@ public class HotNewsFragment extends android.support.v4.app.Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        myRecyclerViewItemClickListener = this;
         View view = inflater.from(getActivity()).inflate(R.layout.news_screen, null);
-        newsListView = (ListView) view.findViewById(R.id.news_list);
-        viewpager = (NewsImageViewPager) view.findViewById(R.id.newsImageViewPager);
+        newsListView = (RecyclerView)view.findViewById(R.id.news_list);
+        newsListView.setHasFixedSize(true);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        newsListView.setLayoutManager(mLayoutManager);
+        newsListView.setItemAnimator(new DefaultItemAnimator());
+
         new HotNewsAsyncTask().execute("http://v.juhe.cn/toutiao/index?type=top&key=b69cc2e92edc5b582eba0a94c51173c8");
         return view;
     }
@@ -56,18 +67,19 @@ public class HotNewsFragment extends android.support.v4.app.Fragment {
         @Override
         protected void onPostExecute(final List<News> newses) {
             super.onPostExecute(newses);
-            newsListView.setAdapter(new NewsListAdapter(getActivity(), newses));
-            newsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Intent intent = new Intent();
-                    intent.setAction("android.intent.action.VIEW");
-                    Uri url = Uri.parse(newses.get(position).getUrl());
-                    intent.setData(url);
-                    startActivity(intent);
-                }
-            });
+            NewsListAdapter adapter = new NewsListAdapter(getActivity(), newses);
+            _list = newses;
+            newsListView.setAdapter(adapter);
+            adapter.setOnItemClickListener(myRecyclerViewItemClickListener);
         }
     }
 
+    @Override
+    public void onItemClick(View view, int position) {
+        Intent intent = new Intent();
+        intent.setAction("android.intent.action.VIEW");
+        Uri url = Uri.parse(_list.get(position).getUrl());
+        intent.setData(url);
+        startActivity(intent);
+    }
 }
