@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
+import android.util.LruCache;
 import android.widget.ImageView;
 
 import java.io.BufferedInputStream;
@@ -20,6 +21,31 @@ public class ImageLoader {
 
     private ImageView mImageView;
     private String mUrl;
+    private  LruCache<String,Bitmap> lruCache;
+
+    public ImageLoader(){
+        //获取最大的可用内存
+        int maxMemory = (int)Runtime.getRuntime().maxMemory();
+
+        //设置缓存的Size
+        int cacheSize = maxMemory/4;
+
+        lruCache = new LruCache<String, Bitmap>(cacheSize){
+            @Override
+            protected int sizeOf(String key, Bitmap value) {
+                return value.getByteCount();
+            }
+        };
+    }
+
+    public Bitmap getBitmapFromCache(String url){
+        return lruCache.get(url);
+    }
+
+    public void addBitmapToCache(String url, Bitmap bitmap){
+        if(getBitmapFromCache(url) == null)
+            lruCache.put(url, bitmap);
+    }
 
     public void loadImage(ImageView newsImageView, final String url) {
         mImageView = newsImageView;
@@ -28,7 +54,12 @@ public class ImageLoader {
             @Override
             public void run() {
                 super.run();
-                Bitmap bitmap = getBitmapFromUrl(url);
+                Bitmap bitmap = getBitmapFromCache(url);
+                if(bitmap == null){
+                    bitmap = getBitmapFromUrl(url);
+                    if(bitmap != null)
+                        addBitmapToCache(url, bitmap);
+                }
                 Message msg = Message.obtain();
                 msg.obj = bitmap;
                 handler.sendMessage(msg);
@@ -47,12 +78,15 @@ public class ImageLoader {
                 inputStream = new BufferedInputStream(connection.getInputStream());
                 bitmap = BitmapFactory.decodeStream(inputStream);
                 return bitmap;
-            } catch (IOException e) {
+            }catch (MalformedURLException e){
+                e.printStackTrace();
+            }
+            catch (IOException e) {
                 e.printStackTrace();
             }finally {
                 try {
                     inputStream.close();
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

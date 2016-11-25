@@ -23,9 +23,8 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private Context context;
     private List<News> list;
     private LayoutInflater inflater;
-    private ImageLoader imageLoader;
     private MyRecyclerViewItemClickListener mListener;
-
+    private ImageLoader imageLoader;
     public interface MyRecyclerViewItemClickListener{
         public void onItemClick(View view, int position);
     }
@@ -33,6 +32,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public NewsListAdapter(Context context, List<News> list) {
         this.context = context;
         this.list = list;
+        imageLoader = new ImageLoader();
     }
 
     @Override
@@ -54,7 +54,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             String url = list.get(i).getThumbnail_pic();
             ((ItemViewHolder)viewHolder).newsImageView.setTag(url);
             ((ItemViewHolder)viewHolder).newsImageView.setImageResource(R.mipmap.ic_launcher);
-            new ImageLoader().loadImage(((ItemViewHolder)viewHolder).newsImageView, url);
+            imageLoader.loadImage(((ItemViewHolder) viewHolder).newsImageView, url);
             ((ItemViewHolder)viewHolder).newsTitleText.setText(list.get(i).getTitle());
             ((ItemViewHolder)viewHolder).newsDateText.setText(list.get(i).getDate().substring(0,10));
         }

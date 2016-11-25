@@ -67,10 +67,12 @@ public class HotNewsFragment extends android.support.v4.app.Fragment implements 
         @Override
         protected void onPostExecute(final List<News> newses) {
             super.onPostExecute(newses);
-            NewsListAdapter adapter = new NewsListAdapter(getActivity(), newses);
-            _list = newses;
-            newsListView.setAdapter(adapter);
-            adapter.setOnItemClickListener(myRecyclerViewItemClickListener);
+            if(newses != null){
+                NewsListAdapter adapter = new NewsListAdapter(getActivity(), newses);
+                _list = newses;
+                adapter.setOnItemClickListener(myRecyclerViewItemClickListener);
+                newsListView.setAdapter(adapter);
+            }
         }
     }
 
