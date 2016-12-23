@@ -4,33 +4,54 @@
     android:layout_height="match_parent"
     android:id="@+id/refreshLayout">
     <LinearLayout
-        android:orientation="vertical" android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <!--<RelativeLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_weight="2">-->
-        <!--<com.example.guochen.viewpageranimation.NewsImageViewPager-->
-        <!--android:id="@+id/newsImageViewPager"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent">-->
-        <!--</com.example.guochen.viewpageranimation.NewsImageViewPager>-->
-        <!--<LinearLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="25dp"-->
-        <!--android:gravity="center_horizontal"-->
-        <!--android:orientation="horizontal"-->
-        <!--android:layout_marginBottom="30dp"-->
-        <!--android:layout_alignParentBottom="true">-->
-        <!--</LinearLayout>-->
-
-        <!--</RelativeLayout>-->
-        <android.support.v7.widget.RecyclerView
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/news_list"
-            android:scrollbars="vertical"
-            android:cacheColorHint="@null" >
-        </android.support.v7.widget.RecyclerView>
+            android:layout_margin="10dp"
+            android:layout_height="200dp">
+            <com.example.guochen.viewpageranimation.NewsImageViewPager
+                android:id="@+id/newsImageViewPager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </com.example.guochen.viewpageranimation.NewsImageViewPager>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:id="@+id/topImageLayout"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:layout_marginBottom="15dp"
+                android:layout_alignParentBottom="true">
+                <ImageView
+                    android:padding="8dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/dark_dot"/>
+                <ImageView
+                    android:padding="8dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/dark_dot"/>
+                <ImageView
+                    android:padding="8dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/dark_dot"/>
+            </LinearLayout>
+        </RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/news_list"
+                android:scrollbars="vertical"
+                android:cacheColorHint="@null" >
+            </android.support.v7.widget.RecyclerView>
+        </LinearLayout>
     </LinearLayout>
 </android.support.v4.widget.SwipeRefreshLayout>

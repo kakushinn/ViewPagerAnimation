@@ -61,6 +61,7 @@ public class TopNewsService {
                     newsBean.setDate(jsonObject.getString("date"));
                     newsBean.setThumbnail_pic(jsonObject.getString("thumbnail_pic_s"));
                     newsBean.setUrl(jsonObject.getString("url"));
+                    newsBean.setThumbnail_pic_large(jsonObject.getString("thumbnail_pic_s03"));
                     newsList.add(newsBean);
                 }
             } catch (JSONException e) {
