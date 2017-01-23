@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -44,6 +46,27 @@ public class HotNewsFragment extends android.support.v4.app.Fragment implements 
     public LinearLayout imageLinearLayout;
     public ImageView[] dots = new ImageView[3];
     public int currentIndex = 0;
+    public NewsImageHandler mNewsImageHandler = new NewsImageHandler();
+
+    class NewsImageHandler extends Handler
+    {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what)
+            {
+                case 0:
+                    int preIndex = viewpager.getCurrentItem();
+                    currentIndex = (currentIndex+1)%3;
+                    viewpager.setCurrentItem(currentIndex);
+                    dots[currentIndex].setImageResource(R.mipmap.white_dot);
+                    dots[preIndex].setImageResource(R.mipmap.dark_dot);
+                    sendEmptyMessageDelayed(0,3000);
+                    break;
+            }
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +111,7 @@ public class HotNewsFragment extends android.support.v4.app.Fragment implements 
 
             }
         });
+        mNewsImageHandler.sendEmptyMessageDelayed(0,3000);
         new HotNewsAsyncTask().execute("http://v.juhe.cn/toutiao/index?type=tiyu&key=b69cc2e92edc5b582eba0a94c51173c8");
         return view;
     }
@@ -114,7 +138,10 @@ public class HotNewsFragment extends android.support.v4.app.Fragment implements 
                 viewpager.setAdapter(new PagerAdapter() {
                     @Override
                     public int getCount() {
-                        return 3;
+                        if(newses == null || newses.size() == 0 || newses.size()>=3)
+                            return 3;
+                        else
+                            return newses.size();
                     }
 
                     @Override
@@ -132,20 +159,22 @@ public class HotNewsFragment extends android.support.v4.app.Fragment implements 
                             imageView.setImageResource(R.mipmap.guide_image2);
                         else
                             imageView.setImageResource(R.mipmap.guide_image3);
-                        ImageLoader imageLoader = new ImageLoader();
-                        String imageUrl = newses.get(position).getThumbnail_pic_large();
-                        imageView.setTag(imageUrl);
-                        imageView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent = new Intent();
-                                intent.setAction("android.intent.action.VIEW");
-                                Uri url = Uri.parse(newses.get(position).getUrl());
-                                intent.setData(url);
-                                startActivity(intent);
-                            }
-                        });
-                        imageLoader.loadImage(imageView, imageUrl);
+                        if(newses != null && newses.size() != 0){
+                            ImageLoader imageLoader = new ImageLoader();
+                            String imageUrl = newses.get(position).getThumbnail_pic_large();
+                            imageView.setTag(imageUrl);
+                            imageView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent();
+                                    intent.setAction("android.intent.action.VIEW");
+                                    Uri url = Uri.parse(newses.get(position).getUrl());
+                                    intent.setData(url);
+                                    startActivity(intent);
+                                }
+                            });
+                            imageLoader.loadImage(imageView, imageUrl);
+                        }
                         container.addView(imageView);
                         return imageView;
                     }
