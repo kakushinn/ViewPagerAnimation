@@ -7,40 +7,6 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_margin="10dp"
-            android:layout_height="200dp">
-            <com.example.guochen.viewpageranimation.NewsImageViewPager
-                android:id="@+id/newsImageViewPager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-            </com.example.guochen.viewpageranimation.NewsImageViewPager>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="25dp"
-                android:id="@+id/topImageLayout"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal"
-                android:layout_marginBottom="15dp"
-                android:layout_alignParentBottom="true">
-                <ImageView
-                    android:padding="8dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@mipmap/dark_dot"/>
-                <ImageView
-                    android:padding="8dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@mipmap/dark_dot"/>
-                <ImageView
-                    android:padding="8dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@mipmap/dark_dot"/>
-            </LinearLayout>
-        </RelativeLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
